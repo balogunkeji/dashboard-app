@@ -39,7 +39,7 @@ const Header = ({ toggleMenu }: { toggleMenu: () => void }) => (
 
 // Main Content Component
 const MainContent = ({ children }: { children: React.ReactNode }) => (
-  <main className="p-4 sm:p-6 bg-[#f9f9f9] h-screen">
+  <main className="p-4 sm:p-6 bg-[#f9f9f9] h-screen w-full px-[10%] overflow-y-auto">
     {children}
   </main>
 );
