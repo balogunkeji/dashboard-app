@@ -20,15 +20,19 @@ export const countProducts = () => {
 
 export const productsByStatus = () => {
   const { products } = useProductStore.getState();
+
   return products.reduce<ProductStatusCounts>(
     (acc, product) => {
       const status = product.status as ProductStatus;
-      if (!acc[status]) {
-        acc[status] = 0;
+
+      if (status === "pending" || status === "delivered" || status === "cancelled") {
+        acc[status] += 1;
+      } else {
+        console.warn(`Invalid status found: ${product.status}`);
       }
-      acc[status] += 1;
+
       return acc;
     },
-    { pending: 0, delivered: 0, cancelled: 0 }
+    { pending: 0, delivered: 0, cancelled: 0 } // Initial counts
   );
 };

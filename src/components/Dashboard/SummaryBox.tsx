@@ -6,7 +6,7 @@ const SummaryBox = () => {
   const statusCounts = productsByStatus();
 
   return (
-    <div className="flex gap-4 justify-center">
+    <div className="flex  gap-4 justify-center">
       <div className="bg-gray-100 p-4 rounded-lg">Total: {total}</div>
       <div className="bg-gray-100 p-4 rounded-lg">Pending: {statusCounts.pending}</div>
       <div className="bg-gray-100 p-4 rounded-lg">Delivered: {statusCounts.delivered}</div>

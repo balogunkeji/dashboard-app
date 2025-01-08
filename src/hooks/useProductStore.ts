@@ -1,4 +1,4 @@
-import {create} from "zustand";
+import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type Package = {
@@ -9,7 +9,7 @@ type Package = {
   quantityUnit: string;
 };
 
-type Product = {
+export type Product = {
   id: string;
   title: string;
   recipient: string;
@@ -24,29 +24,46 @@ type Product = {
 
 type ProductStore = {
   products: Product[];
+  isLoading: boolean;
   addProduct: (product: Product) => void;
   updateProduct: (id: string, updatedProduct: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  setLoading: (loading: boolean) => void;
 };
 
 export const useProductStore = create<ProductStore>()(
-  persist<ProductStore>(
-    (
-      set: (partial: Partial<ProductStore> | ((state: ProductStore) => Partial<ProductStore>)) => void,
-      get: () => ProductStore
-    ) => ({
+  persist(
+    (set) => ({
       products: [],
-      addProduct: (product: Product) =>
-        set({ products: [...get().products, product] }),
-      updateProduct: (id: string, updatedProduct: Partial<Product>) =>
-        set({
-          products: get().products.map((product) =>
+      isLoading: false,
+      addProduct: (product: Product) => {
+        set((state) => {
+          const updatedProducts = [...state.products, product];
+          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
+          return { products: updatedProducts };
+        });
+      },
+      updateProduct: (id: string, updatedProduct: Partial<Product>) => {
+        set((state) => {
+          const updatedProducts = state.products.map((product) =>
             product.id === id ? { ...product, ...updatedProduct } : product
-          ),
-        }),
-      deleteProduct: (id: string) =>
-        set({ products: get().products.filter((product) => product.id !== id) }),
+          );
+          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
+          return { products: updatedProducts };
+        });
+      },
+      deleteProduct: (id: string) => {
+        set((state) => {
+          const updatedProducts = state.products.filter((product) => product.id !== id);
+          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
+          return { products: updatedProducts };
+        });
+      },
+      setLoading: (loading: boolean) => set({ isLoading: loading }),
     }),
-    { name: "product-storage" }
+    {
+      name: "product-storage",
+    //   getStorage: () => localStorage,
+    }
   )
 );
