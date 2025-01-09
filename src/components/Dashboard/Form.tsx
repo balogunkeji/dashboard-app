@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Product, useProductStore } from "../../hooks/useProductStore";
 import Modal from "../Shared/Modal";
+import { formatUnixDate } from "@/utilities/formateDate";
 
 type ProductFormProps = {
   onClose: () => void;
-  existingProduct: Product | null; // Optional for edit mode
+  existingProduct: Product | null;
 };
 
 const statusOptions = ["pending", "delivered", "cancelled"];
@@ -120,6 +121,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
     setFormState({ ...formState, packages: updatedPackages });
   };
 
+  const currentDateTime = formatUnixDate(Date.now() / 1000);
+
   return (
     <Modal isOpen onClose={onClose}>
       <div className='p-6 rounded-lg w-full'>
@@ -174,13 +177,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
               type='datetime-local'
               placeholder='ETA'
               value={
-                formState.eta
-                  ? new Date(formState.eta * 1000).toISOString().slice(0, 16)
+                formState.eta && formState.eta > 0
+                  ? new Date(formState.eta * 1000).toISOString().slice(0, 16) 
                   : ""
               }
               onChange={(e) => {
-                const isoString = e.target.value; // ISO string like "2024-01-08T12:00"
-                const timestamp = new Date(isoString).getTime() / 1000; // Convert to Unix timestamp
+                const isoString = e.target.value; 
+                const timestamp = new Date(isoString).getTime() / 1000; 
                 handleInputChange(
                   {
                     target: { value: timestamp },
@@ -189,7 +192,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 );
               }}
               className={inputClass}
+              min={currentDateTime}
             />
+
             <select
               value={formState.status}
               onChange={(e) => handleInputChange(e, "status")}
@@ -265,24 +270,24 @@ const ProductForm: React.FC<ProductFormProps> = ({
               Add Package
             </button>
           </div>
-         <div className="flex justify-center w-full gap-6">
-         <button
-            type='button'
-            onClick={handleSubmit}
-            className='px-6 py-2 rounded-md bg-green-500 hover:bg-green-600 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 disabled:bg-gray-300 disabled:cursor-not-allowed'
-            disabled={!validateForm()}
-          >
-            Save
-          </button>
+          <div className='flex justify-center w-full gap-6'>
+            <button
+              type='button'
+              onClick={handleSubmit}
+              className='px-6 py-2 rounded-md bg-green-500 hover:bg-green-600 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 disabled:bg-gray-300 disabled:cursor-not-allowed'
+              disabled={!validateForm()}
+            >
+              Save
+            </button>
 
-          <button
-            type='button'
-            onClick={onClose}
-            className='px-6 py-2 rounded-md bg-gray-400 hover:bg-gray-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50'
-          >
-            Cancel
-          </button>
-         </div>
+            <button
+              type='button'
+              onClick={onClose}
+              className='px-6 py-2 rounded-md bg-gray-400 hover:bg-gray-500 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50'
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </Modal>

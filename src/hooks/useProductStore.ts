@@ -34,12 +34,11 @@ type ProductStore = {
 export const useProductStore = create<ProductStore>()(
   persist(
     (set) => ({
-      products: [],
+      products: [], // Initially empty, will be loaded from localStorage automatically
       isLoading: false,
       addProduct: (product: Product) => {
         set((state) => {
           const updatedProducts = [...state.products, product];
-          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
           return { products: updatedProducts };
         });
       },
@@ -48,22 +47,20 @@ export const useProductStore = create<ProductStore>()(
           const updatedProducts = state.products.map((product) =>
             product.id === id ? { ...product, ...updatedProduct } : product
           );
-          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
           return { products: updatedProducts };
         });
       },
       deleteProduct: (id: string) => {
         set((state) => {
           const updatedProducts = state.products.filter((product) => product.id !== id);
-          localStorage.setItem("product-storage", JSON.stringify({ products: updatedProducts }));
           return { products: updatedProducts };
         });
       },
       setLoading: (loading: boolean) => set({ isLoading: loading }),
     }),
     {
-      name: "product-storage",
-    //   getStorage: () => localStorage,
+      name: "product-storage", // Key for storing the state in localStorage
+      // You can add custom logic here for initial data or storage options if needed
     }
   )
 );

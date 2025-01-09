@@ -39,7 +39,7 @@ const Header = ({ toggleMenu }: { toggleMenu: () => void }) => (
 
 // Main Content Component
 const MainContent = ({ children }: { children: React.ReactNode }) => (
-  <main className="p-4 bg-[#f9f9f9] h-screen md:h-screen w-full overflow-y-auto">
+  <main className="p-4 bg-[#f9f9f9] h-screen md:h-screen w-full overflow-y-auto overflow-x-hidden">
     {children}
   </main>
 );
@@ -60,7 +60,7 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex h-screen relative no-scrollbar">
       <ModalOverlay isOpen={isSidebarOpen} toggleMenu={toggleSidebar} />
       {/* Sidebar is hidden on small screen sizes */}
       <Sidebar />
