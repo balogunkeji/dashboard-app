@@ -59,8 +59,7 @@ export const useProductStore = create<ProductStore>()(
       setLoading: (loading: boolean) => set({ isLoading: loading }),
     }),
     {
-      name: "product-storage", // Key for storing the state in localStorage
-      // You can add custom logic here for initial data or storage options if needed
+      name: "product-storage", 
     }
   )
 );
