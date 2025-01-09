@@ -82,7 +82,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ onEditProduct }) => {
                       e.stopPropagation();
                       onEditProduct(product);
                     }}
-                    className="bg-[#d1c7e0] text-white w-full max-w-[80px] px-4 py-2 rounded-md text-xs md:text-sm"
+                    className="bg-[#d1c7e0] text-white w-full max-w-[100px] px-4 py-2 rounded-md text-xs md:text-sm"
                   >
                     Edit
                   </button>

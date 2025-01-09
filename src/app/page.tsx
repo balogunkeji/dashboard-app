@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { products, isLoading } = useProductStore();
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
-  console.log(productToEdit);
+
 
   const handleAddProduct = () => {
     setProductToEdit(null); 
