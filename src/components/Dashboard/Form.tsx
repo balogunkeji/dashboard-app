@@ -18,7 +18,7 @@ const Input = ({ label, type = "text", value, onChange, ...props }: any) => (
     type={type}
     value={value}
     onChange={onChange}
-    className="block w-full rounded-md border-gray-300 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 h-10"
+    className="block w-full rounded-md border-gray-300 border focus:ring-transparent focus:border-[#a05aff] sm:text-sm px-4 h-10"
     {...props}
     placeholder={label}
   />
