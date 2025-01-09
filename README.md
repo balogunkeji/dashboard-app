@@ -45,6 +45,7 @@ This project is a responsive dashboard application built using TypeScript, Next.
 ``yarn dev # OR npm run dev``
 5. Open the application in your browser at:
 ``http://localhost:3000``
+
 **Implementation Approach**
 * State Management: I used Zustand to manage the global state of the application, including product data, pagination, and form inputs.
 * GraphQL Simulation: Since no real API is required, I simulated GraphQL queries and mutations in local storage, allowing me to manage and manipulate data seamlessly.
