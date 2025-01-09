@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Package = {
+export type Package = {
   name: string;
   weight: number;
   weightUnit: string;
@@ -34,7 +34,7 @@ type ProductStore = {
 export const useProductStore = create<ProductStore>()(
   persist(
     (set) => ({
-      products: [], // Initially empty, will be loaded from localStorage automatically
+      products: [],
       isLoading: false,
       addProduct: (product: Product) => {
         set((state) => {

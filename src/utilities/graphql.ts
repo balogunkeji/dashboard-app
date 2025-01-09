@@ -1,37 +1,29 @@
 import { useProductStore } from "../hooks/useProductStore";
 
 type ProductStatus = "pending" | "delivered" | "cancelled";
-type ProductStatusCounts = {
-  pending: number;
-  delivered: number;
-  cancelled: number;
-};
+type ProductStatusCounts = Record<ProductStatus, number>;
 
 export const fetchProducts = (page: number, pageSize: number) => {
   const { products } = useProductStore.getState();
-  const start = (page - 1) * pageSize;
-  return products.slice(start, start + pageSize);
+  const startIndex = (page - 1) * pageSize;
+  return products.slice(startIndex, startIndex + pageSize);
 };
 
 export const countProducts = () => {
-  const { products } = useProductStore.getState();
-  return products.length;
+  return useProductStore.getState().products.length;
 };
 
 export const productsByStatus = () => {
   const { products } = useProductStore.getState();
 
   return products.reduce<ProductStatusCounts>(
-    (acc, product) => {
-      const status = product.status as ProductStatus;
-
-      if (status === "pending" || status === "delivered" || status === "cancelled") {
-        acc[status] += 1;
+    (counts, { status }) => {
+      if (["pending", "delivered", "cancelled"].includes(status)) {
+        counts[status as ProductStatus]++;
       } else {
-        console.warn(`Invalid status found: ${product.status}`);
+        console.warn(`Invalid status found: ${status}`);
       }
-
-      return acc;
+      return counts;
     },
     { pending: 0, delivered: 0, cancelled: 0 } // Initial counts
   );

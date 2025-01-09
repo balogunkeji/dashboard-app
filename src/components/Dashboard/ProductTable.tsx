@@ -1,88 +1,76 @@
 import React, { useState } from "react";
 import { Product, useProductStore } from "../../hooks/useProductStore";
 import Modal from "../Shared/Modal";
-import { countProducts, fetchProducts } from "@/utilities/graphql";
 import Loader from "../Shared/Loader";
 
+const PAGE_SIZE = 8;
+
 type ProductTableProps = {
+  products: Product[];
   onEditProduct: (product: Product) => void;
 };
 
-const ProductTable: React.FC<ProductTableProps> = ({ onEditProduct }) => {
+const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) => {
   const { deleteProduct, isLoading } = useProductStore();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
-  const totalProducts = countProducts();
-  const totalPages = Math.ceil(totalProducts / pageSize);
 
-  const currentProducts = fetchProducts(currentPage, pageSize);
+  const totalProducts = products.length;
+  const totalPages = Math.ceil(totalProducts / PAGE_SIZE);
+  const currentProducts = products.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+  const handlePageChange = (direction: "next" | "previous") => {
+    setCurrentPage((prev) =>
+      direction === "next" && prev < totalPages
+        ? prev + 1
+        : direction === "previous" && prev > 1
+        ? prev - 1
+        : prev
+    );
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const closeModal = () => setSelectedProduct(null);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  const handleRowClick = (product: Product) => {
-    setSelectedProduct(product);
-  };
-
-  const closeModal = () => {
-    setSelectedProduct(null);
-  };
+  if (isLoading) return <Loader />;
 
   return (
-    <div className="overflow-x-auto lg:w-[calc(100%-300px)] flex flex-col lg:ml-[300px] no-scrollbar">
-      <div className="border border-gray-200 rounded-[20px] w-full max-w-full overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
-          <thead>
-            <tr className="bg-gray-100 h-[60px]">
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm first:rounded-tl-xl last:rounded-tr-xl">
-                Product ID
-              </th>
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm">Title</th>
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm">Description</th>
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm">Status</th>
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm">ETA</th>
-              <th className="border border-[#f5f5f5] p-2 text-xs md:text-sm">Actions</th>
+    <div className="overflow-x-auto flex flex-col lg:ml-[300px] lg:w-[calc(100%-300px)]">
+      <div className="border border-[#f9f9f] rounded-lg w-full mt-6">
+        <table className="table-auto w-full border-collapse border border-[#f9f9f] rounded-lg overflow-hidden">
+          <thead className="bg-gray-100 h-[50px]">
+            <tr>
+              {["Product ID", "Title", "Description", "Status", "ETA", "Actions"].map((header) => (
+                <th key={header} className="p-2 border border-[#f5f5f5] text-sm">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {currentProducts.map((product, index) => (
               <tr
                 key={product.id}
-                className={`hover:bg-gray-100 h-[60px] cursor-pointer ${
-                  index % 2 === 0 ? "bg-white" : "bg-[#f5f5f5]"
-                }`}
-                onClick={() => handleRowClick(product)}
+                className={`cursor-pointer ${index % 2 ? "bg-[#f5f5f5]" : "bg-white"} `}
+                onClick={() => setSelectedProduct(product)}
               >
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm">{product.id}</td>
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm">{product.title}</td>
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm">{product.description}</td>
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm capitalize">
-                  {product.status}
-                </td>
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm">
-                  {new Date(product.eta * 1000).toLocaleString()}
-                </td>
-                <td className="border border-[#f5f5f5] p-2 text-xs md:text-sm space-y-1 flex flex-wrap lg:flex-nowrap justify-center gap-3">
+                {[
+                  product.id,
+                  product.title,
+                  product.description,
+                  product.status,
+                  new Date(product.eta * 1000).toLocaleString(),
+                ].map((value, i) => (
+                  <td key={i} className="p-2 border border-[#f5f5f5] text-sm text-center h-[50px]">
+                    {value}
+                  </td>
+                ))}
+                <td className="p-2 flex justify-center w-full gap-3 h-[50px]">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onEditProduct(product);
                     }}
-                    className="bg-[#d1c7e0] text-white w-full max-w-[100px] px-4 py-2 rounded-md text-xs md:text-sm"
+                    className="px-3 py-1 text-sm text-white w-full bg-[#ccbce3] max-w-[100px] rounded"
                   >
                     Edit
                   </button>
@@ -91,7 +79,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ onEditProduct }) => {
                       e.stopPropagation();
                       deleteProduct(product.id);
                     }}
-                    className="bg-[#b48c8d] text-white w-full max-w-[80px] px-4 py-2 rounded-md text-xs md:text-sm"
+                    className="px-3 py-1 text-sm text-white w-full bg-[#b48c8d] max-w-[100px] rounded"
                   >
                     Delete
                   </button>
@@ -101,57 +89,50 @@ const ProductTable: React.FC<ProductTableProps> = ({ onEditProduct }) => {
           </tbody>
         </table>
       </div>
-
-      <div className="flex justify-end items-center mt-6 px-4 md:px-8 gap-4 w-full lg:max-w-full">
+      <div className="flex justify-end items-center mt-4 gap-4">
         <button
-          onClick={handlePreviousPage}
+          onClick={() => handlePageChange("previous")}
           disabled={currentPage === 1}
-          className={`${
-            currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-          } text-white px-4 py-2 rounded-md transition duration-200 text-xs md:text-sm`}
+          className={`px-4 py-2 rounded ${currentPage === 1 ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-600"} text-white`}
         >
           Previous
         </button>
-        <span className="text-gray-700 text-xs md:text-sm">
+        <span className="text-sm">
           Page {currentPage} of {totalPages}
         </span>
         <button
-          onClick={handleNextPage}
+          onClick={() => handlePageChange("next")}
           disabled={currentPage === totalPages}
-          className={`${
-            currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white px-4 py-2 rounded-md transition duration-200 text-xs md:text-sm`}
+          className={`px-4 py-2 rounded ${currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-600"} text-white`}
         >
           Next
         </button>
       </div>
-
       <Modal isOpen={!!selectedProduct} onClose={closeModal}>
         {selectedProduct && (
-          <div className="p-6 max-w-full space-y-4">
-            <h2 className="text-3xl font-bold text-center text-[#a05aff] mb-6">Product Details</h2>
-            <div className="space-y-4">
+          <div className="p-6 space-y-4">
+            <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">Product Details</h2>
+            <div>
               {[
-                { label: 'Product ID', value: selectedProduct.id },
-                { label: 'Title', value: selectedProduct.title },
-                { label: 'Description', value: selectedProduct.description },
-                { label: 'ETA', value: new Date(selectedProduct.eta * 1000).toLocaleString() },
-                { label: 'Status', value: selectedProduct.status },
-                { label: 'Recipient', value: selectedProduct.recipient },
-                { label: 'Recipient Phone', value: selectedProduct.recipientPhone },
-                { label: 'Origin', value: selectedProduct.origin },
-                { label: 'Destination', value: selectedProduct.destination },
-                { label: 'Packages', value: selectedProduct.packages.length },
-              ].map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <p className="font-semibold">{item.label}:</p>
-                  <p className="font-normal">{item.value}</p>
+                { label: "Product ID", value: selectedProduct.id },
+                { label: "Title", value: selectedProduct.title },
+                { label: "Description", value: selectedProduct.description },
+                { label: "ETA", value: new Date(selectedProduct.eta * 1000).toLocaleString() },
+                { label: "Status", value: selectedProduct.status },
+                { label: "Origin", value: selectedProduct.origin },
+                { label: "Destination", value: selectedProduct.destination },
+                { label: "Recipient", value: selectedProduct.recipient },
+                { label: "Recipient Phone", value: selectedProduct.recipientPhone },
+                {label: "Packages", value: selectedProduct.packages.length},
+              ].map((item, i) => (
+                <div key={i} className="flex justify-between space-y-2">
+                  <span className="font-medium">{item.label}:</span>
+                  <span>{item.value}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-4">
+            <div className="mt-6 flex flex-col justify-center">
+                <div className="mt-4">
               <p className="text-[18px] font-semibold mb-2">Package Details:</p>
               <div className="space-y-4">
                 {selectedProduct.packages.map((packageItem, index) => (
@@ -166,12 +147,13 @@ const ProductTable: React.FC<ProductTableProps> = ({ onEditProduct }) => {
             <div className="mt-6 flex justify-center w-full">
               <button
                 onClick={closeModal}
-                className="px-4 py-2 bg-[#a05aff] w-[200px] h-[50px] mt-4 text-white rounded-lg shadow-md hover:bg-[#8c4bd9] transition-colors duration-300"
+                className="px-4 py-2 w-[200px] text-white bg-purple-600 rounded hover:bg-purple-700"
               >
                 Close
               </button>
             </div>
           </div>
+      </div>
         )}
       </Modal>
     </div>
