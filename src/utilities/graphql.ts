@@ -25,6 +25,6 @@ export const productsByStatus = () => {
       }
       return counts;
     },
-    { pending: 0, delivered: 0, cancelled: 0 } // Initial counts
+    { pending: 0, delivered: 0, cancelled: 0 }
   );
 };
