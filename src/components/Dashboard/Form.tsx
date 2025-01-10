@@ -244,28 +244,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   ))}
                 </select>
 
-                {["weightUnit", "quantityUnit"].map((field) => {
-                  const options =
-                    field === "weightUnit" ? ["kg", "lbs"] : ["pcs", "boxes"];
-                  return (
-                    <select
-                      key={field}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      value={(pkg as any)[field]}
-                      onChange={(e) =>
-                        handleInputChange(field, e.target.value, index)
-                      }
-                      className='block w-full rounded-md border-gray-300 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 h-10'
-                    >
-                      {options.map((unit) => (
-                        <option key={unit} value={unit}>
-                          {unit}
-                        </option>
-                      ))}
-                    </select>
-                  );
-                })}
-
                 {formState.packages.length > 1 && (
                   <button
                     type='button'
