@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Product, useProductStore } from "../../hooks/useProductStore";
 import Modal from "../Shared/Modal";
-import { formatUnixDate } from "@/utilities/formateDate";
+// import { formatUnixDate } from "@/utilities/formateDate";
 
 type ProductFormProps = {
   onClose: () => void;
@@ -89,10 +89,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   const handleSubmit = () => {
     if (!validateForm()) return alert("Please fill all required fields.");
-    const product = {
-      ...formState,
-      eta: Math.floor(new Date(formState.eta).getTime() / 1000),
-    };
+    const product = { ...formState };
     existingProduct
       ? updateProduct(existingProduct.id, product)
       : addProduct(product);
@@ -142,7 +139,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
               label='ETA'
               value={
                 formState.eta
-                  ? new Date(formState.eta * 1000).toISOString().slice(0, 16)
+                  ? new Date(
+                      new Date(formState.eta * 1000).getTime() -
+                        new Date().getTimezoneOffset() * 60000
+                    )
+                      .toISOString()
+                      .slice(0, 16)
                   : ""
               }
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -151,7 +153,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   new Date(e.target.value).getTime() / 1000
                 )
               }
-              min={formatUnixDate(Date.now() / 1000)}
+              min={new Date(
+                new Date().getTime() - new Date().getTimezoneOffset() * 60000
+              )
+                .toISOString()
+                .slice(0, 16)}
             />
 
             <select
@@ -190,6 +196,18 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     }
                   />
                 ))}
+
+                <Input
+                  key='name'
+                  label='name'
+                  type='text'
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={(pkg as any)['name']}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleInputChange('name', e.target.value, index)
+                  }
+                />
+
                 {["weightUnit", "quantityUnit"].map((field) => {
                   const options =
                     field === "weightUnit" ? ["kg", "lbs"] : ["pcs", "boxes"];

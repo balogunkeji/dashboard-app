@@ -24,8 +24,8 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
       direction === "next" && prev < totalPages
         ? prev + 1
         : direction === "previous" && prev > 1
-        ? prev - 1
-        : prev
+          ? prev - 1
+          : prev
     );
   };
 
@@ -34,8 +34,8 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
   if (isLoading) return <Loader />;
 
   return (
-    <div className="overflow-x-auto flex flex-col lg:ml-[300px] lg:w-[calc(100%-300px)]">
-      <div className="border border-[#f9f9f] rounded-lg w-full mt-6">
+    <div className="flex flex-col w-full">
+      <div className="overflow-x-auto border border-[#f9f9f] rounded-lg w-full mt-6 px-[2px]">
         <table className="table-auto w-full border-collapse border border-[#f9f9f] rounded-lg overflow-hidden">
           <thead className="bg-gray-100 h-[50px]">
             <tr>
@@ -123,7 +123,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
                 { label: "Destination", value: selectedProduct.destination },
                 { label: "Recipient", value: selectedProduct.recipient },
                 { label: "Recipient Phone", value: selectedProduct.recipientPhone },
-                {label: "Packages", value: selectedProduct.packages.length},
+                { label: "Packages", value: selectedProduct.packages.length },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between space-y-2">
                   <span className="font-medium">{item.label}:</span>
@@ -132,28 +132,28 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
               ))}
             </div>
             <div className="mt-6 flex flex-col justify-center">
-                <div className="mt-4">
-              <p className="text-[18px] font-semibold mb-2">Package Details:</p>
-              <div className="space-y-4">
-                {selectedProduct.packages.map((packageItem, index) => (
-                  <div key={index} className="border p-4 rounded-md shadow-sm">
-                    <p className="font-semibold">Package Name: <span className="font-normal">{packageItem.name}</span></p>
-                    <p className="font-semibold">Package Weight: <span className="font-normal">{packageItem.weight} {packageItem.weightUnit}</span></p>
-                    <p className="font-semibold">Package Quantity: <span className="font-normal">{packageItem.quantity} {packageItem.quantityUnit}</span></p>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <p className="text-[18px] font-semibold mb-2">Package Details:</p>
+                <div className="space-y-4">
+                  {selectedProduct.packages.map((packageItem, index) => (
+                    <div key={index} className="border p-4 rounded-md shadow-sm">
+                      <p className="font-semibold">Package Name: <span className="font-normal">{packageItem.name}</span></p>
+                      <p className="font-semibold">Package Weight: <span className="font-normal">{packageItem.weight} {packageItem.weightUnit}</span></p>
+                      <p className="font-semibold">Package Quantity: <span className="font-normal">{packageItem.quantity} {packageItem.quantityUnit}</span></p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-6 flex justify-center w-full">
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 w-[200px] text-white bg-purple-600 rounded hover:bg-purple-700"
+                >
+                  Close
+                </button>
               </div>
             </div>
-            <div className="mt-6 flex justify-center w-full">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 w-[200px] text-white bg-purple-600 rounded hover:bg-purple-700"
-              >
-                Close
-              </button>
-            </div>
           </div>
-      </div>
         )}
       </Modal>
     </div>
