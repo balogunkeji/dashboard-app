@@ -51,7 +51,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   );
 
   const weightOptions = ["kg", "lbs"];
-  const weightOptions = ["pcs", "boxes"];
+  const quantityOptions = ["pcs", "boxes"];
 
   const handleInputChange = (field: string, value: any, index?: number) => {
     if (index !== undefined) {
@@ -237,7 +237,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   }
                   className='block w-full rounded-md border-gray-300 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 h-10'
                 >
-                  {weightOptions.map((unit) => (
+                  {quantityOptions.map((unit) => (
                     <option key={unit} value={unit}>
                       {unit}
                     </option>
