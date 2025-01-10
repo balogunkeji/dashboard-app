@@ -50,6 +50,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
   );
 
+  const weightOptions = ["kg", "lbs"];
+  const weightOptions = ["pcs", "boxes"];
+
   const handleInputChange = (field: string, value: any, index?: number) => {
     if (index !== undefined) {
       const updatedPackages = formState.packages.map((pkg, i) =>
@@ -180,33 +183,66 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 key={index}
                 className='flex flex-wrap sm:flex-nowrap gap-4 items-start sm:items-center mb-2'
               >
-                {["name", "weight", "quantity"].map((field) => (
-                  <Input
-                    key={field}
-                    label={field}
-                    type={
-                      field === "weight" || field === "quantity"
-                        ? "number"
-                        : "text"
-                    }
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    value={(pkg as any)[field]}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange(field, e.target.value, index)
-                    }
-                  />
-                ))}
-
                 <Input
                   key='name'
                   label='name'
                   type='text'
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  value={(pkg as any)['name']}
+                  value={(pkg as any)["name"]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange('name', e.target.value, index)
+                    handleInputChange("name", e.target.value, index)
                   }
                 />
+                <Input
+                  key='weight'
+                  label='weight'
+                  type='text'
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={(pkg as any)["weight"]}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleInputChange("weight", e.target.value, index)
+                  }
+                />
+                <select
+                  key={"weightUnit"}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={(pkg as any)["weightUnit"]}
+                  onChange={(e) =>
+                    handleInputChange("weightUnit", e.target.value, index)
+                  }
+                  className='block w-full rounded-md border-gray-300 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 h-10'
+                >
+                  {weightOptions.map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
+                </select>
+                <Input
+                  key='quantity'
+                  label='quantity'
+                  type='text'
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={(pkg as any)["quantity"]}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleInputChange("quantity", e.target.value, index)
+                  }
+                />
+                <select
+                  key={"quantityUnit"}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value={(pkg as any)["quantityUnit"]}
+                  onChange={(e) =>
+                    handleInputChange("quantityUnit", e.target.value, index)
+                  }
+                  className='block w-full rounded-md border-gray-300 border focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 h-10'
+                >
+                  {weightOptions.map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
+                </select>
 
                 {["weightUnit", "quantityUnit"].map((field) => {
                   const options =
