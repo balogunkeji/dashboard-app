@@ -187,7 +187,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   key='name'
                   label='name'
                   type='text'
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   value={(pkg as any)["name"]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handleInputChange("name", e.target.value, index)
@@ -197,7 +196,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   key='weight'
                   label='weight'
                   type='text'
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   value={(pkg as any)["weight"]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handleInputChange("weight", e.target.value, index)
@@ -205,7 +203,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 />
                 <select
                   key={"weightUnit"}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   value={(pkg as any)["weightUnit"]}
                   onChange={(e) =>
                     handleInputChange("weightUnit", e.target.value, index)
@@ -222,7 +219,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   key='quantity'
                   label='quantity'
                   type='text'
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   value={(pkg as any)["quantity"]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handleInputChange("quantity", e.target.value, index)
@@ -230,7 +226,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 />
                 <select
                   key={"quantityUnit"}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   value={(pkg as any)["quantityUnit"]}
                   onChange={(e) =>
                     handleInputChange("quantityUnit", e.target.value, index)
